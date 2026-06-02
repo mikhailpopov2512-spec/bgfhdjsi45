@@ -1,0 +1,2 @@
+# Treat all .jar files as binary to prevent corruption via line-ending conversions
+*.jar binary
