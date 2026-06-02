@@ -1,0 +1,6 @@
+{
+  "name": "Telet",
+  "description": "Telegram replica with authentic UI and configuration, named Telet.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
