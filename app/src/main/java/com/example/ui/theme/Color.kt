@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 // Light Colors
 val TelegramBlue = Color(0xFF5082B5)
 val TelegramSkyBlue = Color(0xFF3390EC)
-val TelegramLightBg = Color(0xFFF1F3F5)
+val TelegramLightBg = Color(0xFFF3F4F9)
 val TelegramLightCard = Color(0xFFFFFFFF)
 val TelegramLightSentBubble = Color(0xFFE2F7CB)
 val TelegramLightReceivedBubble = Color(0xFFFFFFFF)

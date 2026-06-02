@@ -18,6 +18,11 @@ import com.example.ui.components.TeletChatDetail
 import com.example.ui.components.TeletChatList
 import com.example.ui.components.TeletConfigSettings
 import com.example.ui.components.TeletDrawer
+import com.example.ui.components.TeletLoginScreen
+import com.example.ui.components.TeletPremiumScreen
+import com.example.ui.components.TeletStarsScreen
+import com.example.ui.components.TeletBusinessScreen
+import com.example.ui.components.TeletGiftsScreen
 import com.example.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,9 +33,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val isDark by viewModel.isDarkTheme.collectAsState()
+            val isLoggedIn by viewModel.isLoggedIn.collectAsState()
 
             MyApplicationTheme(darkTheme = isDark) {
-                TeletApp(viewModel = viewModel)
+                if (isLoggedIn) {
+                    TeletApp(viewModel = viewModel)
+                } else {
+                    TeletLoginScreen(viewModel = viewModel)
+                }
             }
         }
     }
@@ -42,6 +52,7 @@ fun TeletApp(viewModel: ChatViewModel) {
     val drawerOpen by viewModel.drawerOpen.collectAsState()
     val activeChatId by viewModel.activeChatId.collectAsState()
     val showConfigScreen by viewModel.showConfigScreen.collectAsState()
+    val activeSection by viewModel.activeSection.collectAsState()
     val chats by viewModel.filteredChats.collectAsState()
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -107,6 +118,30 @@ fun TeletApp(viewModel: ChatViewModel) {
                     TeletConfigSettings(
                         viewModel = viewModel,
                         onBack = { viewModel.setShowConfigScreen(false) }
+                    )
+                }
+                activeSection == "premium" -> {
+                    TeletPremiumScreen(
+                        viewModel = viewModel,
+                        onBack = { viewModel.selectSection(null) }
+                    )
+                }
+                activeSection == "stars" -> {
+                    TeletStarsScreen(
+                        viewModel = viewModel,
+                        onBack = { viewModel.selectSection(null) }
+                    )
+                }
+                activeSection == "gifts" -> {
+                    TeletGiftsScreen(
+                        viewModel = viewModel,
+                        onBack = { viewModel.selectSection(null) }
+                    )
+                }
+                activeSection == "business" -> {
+                    TeletBusinessScreen(
+                        viewModel = viewModel,
+                        onBack = { viewModel.selectSection(null) }
                     )
                 }
                 activeChatId != null -> {

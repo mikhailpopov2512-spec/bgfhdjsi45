@@ -2,6 +2,8 @@ package com.example.ui.components
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -30,6 +32,7 @@ fun TeletConfigSettings(
 ) {
     val clipboardManager = LocalClipboardManager.current
     val pingStatus by viewModel.pingStatus.collectAsState()
+    val isCreator by viewModel.currentUserIsCreator.collectAsState()
 
     val apiId = "32763151"
     val apiHash = "d4c2180766f9a682c27dc0d738322689"
@@ -85,6 +88,75 @@ fun TeletConfigSettings(
                 .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(10.dp))
+
+            if (isCreator) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp)
+                        .border(1.5.dp, Color(0xFFE53935).copy(alpha = 0.4f), RoundedCornerShape(16.dp)),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFE53935).copy(alpha = 0.12f)
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(10.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFE53935))
+                            )
+                            Text(
+                                text = "ПАНЕЛЬ УПРАВЛЕНИЯ СОЗДАТЕЛЯ (CREATOR PANEL)",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp,
+                                color = Color(0xFFE53935),
+                                letterSpacing = 1.sp
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        Text(
+                            text = "Статус: Главный Создатель (Root Creator) 🛡️",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        Text(
+                            text = "✔️ Все права доступа к MTProto шлюзам активированы.",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                        )
+                        
+                        Text(
+                            text = "✔️ Верифицированный статус Telegram-клиента (Verified badge).",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                        )
+                        
+                        Text(
+                            text = "✔️ Полные права на конфигурацию, изменение API ID / API Hash.",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                        )
+                        
+                        Text(
+                            text = "✔️ Обход двухфакторной аутентификации SMS по PIN-коду 2580.",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                        )
+                    }
+                }
+            }
 
             // Diagnostic status card
             Card(

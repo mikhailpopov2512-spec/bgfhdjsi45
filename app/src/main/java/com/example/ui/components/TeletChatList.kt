@@ -76,7 +76,7 @@ fun TeletChatList(
                             Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear Search", tint = MaterialTheme.colorScheme.onBackground)
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
                 )
             } else {
                 // Classic Telegram Title Bar
@@ -93,7 +93,7 @@ fun TeletChatList(
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
+                        containerColor = MaterialTheme.colorScheme.background,
                         titleContentColor = MaterialTheme.colorScheme.onBackground
                     )
                 )
@@ -102,10 +102,10 @@ fun TeletChatList(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showNewChatDialog.value = true },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.testTag("add_chat_fab"),
-                shape = CircleShape
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(imageVector = Icons.Default.AddComment, contentDescription = "New Discussion Thread")
             }
@@ -121,7 +121,7 @@ fun TeletChatList(
             ScrollableTabRow(
                 selectedTabIndex = getTabIndexOf(activeTab),
                 edgePadding = 12.dp,
-                containerColor = MaterialTheme.colorScheme.surface,
+                containerColor = MaterialTheme.colorScheme.background,
                 contentColor = MaterialTheme.colorScheme.primary,
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
@@ -136,45 +136,53 @@ fun TeletChatList(
                 TabItem(label = "Bots", count = null, isSelected = activeTab == "Bots") { viewModel.setTab("Bots") }
             }
 
-            // Conversations listings
-            if (chats.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "No chats found",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Tap the bottom-right pencil button to create a thread!",
-                            fontSize = 13.sp,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
-                        )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Conversations listings inside vibrant rounded top card container
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
+                if (chats.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "No chats found",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Tap the bottom-right pencil button to create a thread!",
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
+                            )
+                        }
                     }
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    items(chats) { chat ->
-                        ChatItemRow(
-                            chat = chat,
-                            onClick = { viewModel.selectChat(chat.id) }
-                        )
-                        Divider(
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.05f),
-                            thickness = 1.dp,
-                            modifier = Modifier.padding(start = 76.dp)
-                        )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        items(chats) { chat ->
+                            ChatItemRow(
+                                chat = chat,
+                                onClick = { viewModel.selectChat(chat.id) }
+                            )
+                            Divider(
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.05f),
+                                thickness = 1.dp,
+                                modifier = Modifier.padding(start = 76.dp)
+                            )
+                        }
                     }
                 }
             }

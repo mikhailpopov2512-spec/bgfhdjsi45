@@ -29,6 +29,20 @@ fun TeletDrawer(
     showNewChatDialog: MutableState<Boolean>
 ) {
     val isDark by viewModel.isDarkTheme.collectAsState()
+    val userPhone by viewModel.currentUserPhone.collectAsState()
+    val userName by viewModel.currentUserName.collectAsState()
+    val isCreator by viewModel.currentUserIsCreator.collectAsState()
+    val isVerified by viewModel.currentUserIsVerified.collectAsState()
+
+    val userInitials = remember(userName) {
+        if (userName.length >= 2) {
+            userName.substring(0, 2).uppercase()
+        } else if (userName.isNotEmpty()) {
+            userName.take(1).uppercase()
+        } else {
+            "TU"
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -56,11 +70,11 @@ fun TeletDrawer(
                         modifier = Modifier
                             .size(60.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary),
+                            .background(if (isCreator) Color(0xFFE53935) else MaterialTheme.colorScheme.primary),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "TU",
+                            text = userInitials,
                             color = Color.White,
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold
@@ -82,18 +96,59 @@ fun TeletDrawer(
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                Text(
-                    text = "Telet User",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = userName,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    if (isVerified) {
+                        Surface(
+                            shape = CircleShape,
+                            color = Color(0xFF3390EC),
+                            modifier = Modifier.size(16.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = "✓",
+                                    color = Color.White,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+                }
 
-                Text(
-                    text = "+7 (999) 123-45-67",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = userPhone,
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                    )
+                    if (isCreator) {
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            color = Color(0xFFFF9800),
+                            modifier = Modifier.padding(vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = "Создатель",
+                                color = Color.White,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
 
@@ -137,11 +192,62 @@ fun TeletDrawer(
             )
 
             DrawerItem(
+                icon = Icons.Outlined.WorkspacePremium,
+                label = "Telegram Premium",
+                tag = "premium_drawer_item",
+                onClick = {
+                    viewModel.selectSection("premium")
+                    onCloseDrawer()
+                }
+            )
+
+            DrawerItem(
+                icon = Icons.Outlined.Star,
+                label = "Telegram Stars",
+                tag = "stars_drawer_item",
+                onClick = {
+                    viewModel.selectSection("stars")
+                    onCloseDrawer()
+                }
+            )
+
+            DrawerItem(
+                icon = Icons.Outlined.CardGiftcard,
+                label = "Telegram Gifts",
+                tag = "gifts_drawer_item",
+                onClick = {
+                    viewModel.selectSection("gifts")
+                    onCloseDrawer()
+                }
+            )
+
+            DrawerItem(
+                icon = Icons.Outlined.BusinessCenter,
+                label = "Telegram Business",
+                tag = "business_drawer_item",
+                onClick = {
+                    viewModel.selectSection("business")
+                    onCloseDrawer()
+                }
+            )
+
+            DrawerItem(
                 icon = Icons.Outlined.Settings,
                 label = "Credentials Configuration",
                 tag = "credentials_settings_item",
                 onClick = {
                     viewModel.setShowConfigScreen(true)
+                    viewModel.selectSection(null)
+                    onCloseDrawer()
+                }
+            )
+
+            DrawerItem(
+                icon = Icons.Outlined.Logout,
+                label = "Switch Profile (Log Out)",
+                tag = "logout_drawer_item",
+                onClick = {
+                    viewModel.performLogout()
                     onCloseDrawer()
                 }
             )

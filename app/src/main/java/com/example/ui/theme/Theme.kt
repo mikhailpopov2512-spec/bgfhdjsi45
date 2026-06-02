@@ -20,7 +20,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = TelegramBlue,
+    primary = TelegramSkyBlue,
     secondary = TelegramSkyBlue,
     tertiary = TelegramSkyBlue,
     background = TelegramLightBg,
@@ -28,7 +28,8 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = Color.White,
     onBackground = Color.Black,
     onSurface = Color.Black,
-    primaryContainer = TelegramBlue,
+    primaryContainer = Color(0xFFD3E3FD),
+    onPrimaryContainer = Color(0xFF041E49),
     surfaceVariant = TelegramLightReceivedBubble
 )
 
